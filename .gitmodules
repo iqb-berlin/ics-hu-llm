@@ -1,0 +1,3 @@
+[submodule "lib/ics_components"]
+	path = lib/ics_components
+	url = https://github.com/iqb-berlin/ics-components.git
