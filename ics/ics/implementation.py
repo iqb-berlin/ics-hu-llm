@@ -1,18 +1,19 @@
-from typing import List, Optional
-from pydantic import BaseModel, StrictStr, StrictInt, Field
-from fastapi import HTTPException
+import os
+from typing import Optional
+from pydantic import BaseModel
+from redis import StrictRedis
+
 from ics_components.common import CoderRegistry as CoderRegistryInterface
 from ics_models import Coder, Task as TaskBase, TaskUpdate as TaskUpdateBase
 
-
+redis_host = os.getenv('REDIS_HOST') or 'localhost'
+redis_store = StrictRedis(host=redis_host, port=6379, db=0, decode_responses=True)
 
 class TaskInstructions(BaseModel):
-    item_targets: List[StrictStr] = Field(description="a list of correct reference answers for the current item", alias="itemTargets")
-    random_seed: StrictInt|None = Field(default=None, description="Leave out for true randomness or enter a id for replicable results", alias="randomSeed")
+    text: str = 'Antworte nur mit 0 oder 1 ob folgendes korrekt ist: "$VALUE"'
     @staticmethod
     def description() -> str:
-        return "Isaac-SaS also uses a list of possible correct answers from the code book for training along with teh encoded training data."
-
+        return "HU-LLM unterstützt außer dem Eingabetext keine Parameter. Gib den Anfragtext hier ein. $VALUE wird gegen den Wert ersetzt, der zu codieren ist. Das Ergebnis wird versucht in eine Zahl umzuwandeln."
 
 class Task(TaskBase):
     instructions: Optional[TaskInstructions] = None
@@ -22,13 +23,15 @@ class TaskUpdate(TaskUpdateBase):
 
 class CoderRegistry(CoderRegistryInterface):
     def list_coders(self) -> list[Coder]:
-        coder_ids = fetch_stored_models()
-        return [Coder(id=model_id, label=model_id) for model_id in coder_ids]
+        coders : list[Coder] = []
+        for key in redis_store.keys('instructions:*'):
+            coders.append(
+                Coder(
+                    id = key.replace('instructions:', ''),
+                    label = key # TODO
+                )
+            )
+        return coders
 
     def delete_coder(self, coder_id: str) -> None:
-        try:
-            delete_model(coder_id)
-        except FileNotFoundError:
-            raise HTTPException(status_code=404, detail=f"Coder id {coder_id} not found")
-        except PermissionError:
-            raise HTTPException(status_code=403, detail=f"Could not delete file of {coder_id}")
+        redis_store.delete('instructions:' + coder_id)
