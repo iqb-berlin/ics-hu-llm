@@ -1,6 +1,6 @@
 import os
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from redis import StrictRedis
 
 from ics_components.common import CoderRegistry as CoderRegistryInterface
@@ -10,10 +10,13 @@ redis_host = os.getenv('REDIS_HOST') or 'localhost'
 redis_store = StrictRedis(host=redis_host, port=6379, db=0, decode_responses=True)
 
 class TaskInstructions(BaseModel):
-    text: str = 'Antworte nur mit 0 oder 1 ob folgendes korrekt ist: "$VALUE"'
+    text: str = Field(default = 'Antworte nur mit 0 oder 1 ob folgendes korrekt ist: "$VALUE"', description = "Promttext")
     @staticmethod
     def description() -> str:
-        return "HU-LLM unterstützt außer dem Eingabetext keine Parameter. Gib den Anfragtext hier ein. $VALUE wird gegen den Wert ersetzt, der zu codieren ist. Das Ergebnis wird versucht in eine Zahl umzuwandeln."
+        return ("<a href='https://llm1-compute.cms.hu-berlin.de/' target='_blank'>HU-LLM</a> wird nur mit einem Promt bedient.<br>"
+                "Promt zur Auswertung hier eingeben (Der Ausdruck <i>$VALUE</i> wird gegen den Wert ersetzt, der zu codieren ist.<br>"
+                "Das Promt sollte eine Aufforderung enthalten, nur mit 0 oder 1 zu antworten, denn die Antwort wird immer als Zahl"
+                " ( = Code)interpretiert.</a>")
 
 class Task(TaskBase):
     instructions: Optional[TaskInstructions] = None
