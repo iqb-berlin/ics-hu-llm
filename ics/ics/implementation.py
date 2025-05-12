@@ -33,10 +33,11 @@ class CoderRegistry(CoderRegistryInterface):
     def list_coders(self) -> list[Coder]:
         coders : list[Coder] = []
         for key in redis_store.keys('instructions:*'):
+            instructions = TaskInstructions.model_validate_json(redis_store.get(key))
             coders.append(
                 Coder(
                     id = key.replace('instructions:', ''),
-                    label = key # TODO
+                    label = instructions.text[:150]
                 )
             )
         return coders
