@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/ics" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ics/ics" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/specs/coding-service/src/python" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/specs/coding-service/src/python/ics_models" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/specs/coding-service/src/python/ics_models/ics_models" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/specs/coding-service/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/src/ics_components" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/src/ics_components/ics_components" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib/ics_components/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
