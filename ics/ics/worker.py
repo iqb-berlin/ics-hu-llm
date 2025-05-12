@@ -60,3 +60,6 @@ def store_instructions(coder_id: str, instructions: TaskInstructions):
 
 def restore_instructions(coder_id: str) -> TaskInstructions:
     return TaskInstructions.model_validate_json(redis_store.get('instructions:' + coder_id))
+
+def coder_exists(coder_id: str) -> bool:
+    return redis_store.exists('instructions:' + coder_id)
