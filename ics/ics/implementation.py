@@ -9,6 +9,11 @@ from ics_models import Coder, Task as TaskBase, TaskUpdate as TaskUpdateBase
 redis_host = os.getenv('REDIS_HOST') or 'localhost'
 redis_store = StrictRedis(host=redis_host, port=6379, db=0, decode_responses=True)
 
+class IcService(BaseModel):
+    @staticmethod
+    def name() -> str:
+        return "hu-llm"
+
 class TaskInstructions(BaseModel):
     text: str = Field(default = 'Antworte nur mit 0 oder 1 ob folgendes korrekt ist: "$VALUE"', description = "Promttext")
     @staticmethod

@@ -1,6 +1,6 @@
 [project]
 name = "ics"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name="Philipp Franck", email="philipp.franck@hu-berlin.de" }
 ]
@@ -17,3 +17,6 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/iqb-berlin/ics-hu-llm"
+
+[tool.ics]
+name = 'hu-llm'
