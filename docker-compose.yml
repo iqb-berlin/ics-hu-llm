@@ -12,6 +12,7 @@ services:
       - 6379:6379
 
   ics-hullm-worker:
+    image: ${REGISTRY_PATH}ics-hullm-worker
     build:
       dockerfile: worker.Dockerfile
     volumes:
@@ -28,6 +29,7 @@ services:
       - ics-hullm-redis
 
   ics-hullm-backend:
+    image: ${REGISTRY_PATH}ics-hullm-backend
     container_name: ics-hullm-backend
     build:
       dockerfile: backend.Dockerfile
