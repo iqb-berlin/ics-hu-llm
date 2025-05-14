@@ -46,6 +46,7 @@ services:
       - ics-hullm-redis
 
   ics-hullm-rq-dashboard:
+    image: ${REGISTRY_PATH}ics-hullm-worker
     container_name: ics-hullm-rq-dashboard
     build:
       dockerfile: worker.Dockerfile
