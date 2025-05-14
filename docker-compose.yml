@@ -8,8 +8,6 @@ services:
       - "redis-server --maxmemory 1073741824 --maxmemory-policy volatile-lru"
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-    ports:
-      - 6379:6379
 
   ics-hullm-worker:
     image: ${REGISTRY_PATH}ics-hullm-worker
@@ -37,12 +35,12 @@ services:
       - ./ics:/app/ics
       - ./lib:/app/lib
       - ics-hullm-data:/data
-    command: uvicorn ics_components.main:app --port 9999 --reload --app-dir src --host 0.0.0.0
+    command: uvicorn ics_components.main:app --port 9997 --reload --app-dir src --host 0.0.0.0
     environment:
       REDIS_HOST: ics-hullm-redis
       IS_DATA_DIR: /data
     ports:
-      - 9999:9999
+      - 9997:9997
 #      - 9898:9898 # python debug server
     depends_on:
       - ics-hullm-redis
@@ -52,8 +50,8 @@ services:
     build:
       dockerfile: worker.Dockerfile
     command: rq-dashboard --redis-url=redis://ics-hullm-redis:6379
-    ports:
-      - 9181:9181
+#    ports:
+#      - 9181:9181
 #    profiles:
 #      - dev
 
