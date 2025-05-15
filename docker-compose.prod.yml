@@ -40,7 +40,7 @@ services:
       OAUTH2_PROXY_REDIRECT_URL: https://is.${SERVER_NAME}/oauth2/callback
       OAUTH2_PROXY_COOKIE_SECRET: ${ICS_IS_COOKIE_SECRET}
       OAUTH2_PROXY_EMAIL_DOMAINS: ${ICS_IS_EMAIL_DOMAIN}
-      OAUTH2_PROXY_UPSTREAMS: http://ics-hullm-backend:9999
+      OAUTH2_PROXY_UPSTREAMS: http://ics-hullm-backend:9997
     restart: always
     networks:
       - application-network
