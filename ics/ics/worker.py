@@ -10,9 +10,15 @@ from ics_components.common.models import TrainingResult
 from ics.implementation import TaskInstructions
 from ics_models import Response, Code
 
-client = Client("https://llm1-compute.cms.hu-berlin.de/")
 redis_host = os.getenv('REDIS_HOST') or 'localhost'
 redis_store = StrictRedis(host=redis_host, port=6379, db=0, decode_responses=True)
+
+def connect() -> Client | None:
+    try:
+        return Client("https://llm1-compute.cms.hu-berlin.de/")
+    except Exception as e:
+        print(e)
+        raise Exception('Could not connect to HU LLM (too many requests?).')
 
 def get_code_from_answer(answer: str) -> List[Code] | str:
     try:
@@ -35,6 +41,7 @@ def get_code_from_answer(answer: str) -> List[Code] | str:
     return [Code(id = predicted_code)]
 
 def code(model_id: str, input_data: List[Response]) -> List[Response]:
+    client = connect()
     instructions = restore_instructions(model_id)
     for row in input_data:
         print_in_worker(row)
