@@ -14,8 +14,6 @@ services:
     build:
       dockerfile: worker.Dockerfile
     volumes:
-      - ./ics:/app/ics
-      - ./lib:/app/lib
       - ics-hullm-data:/data
     command: rq worker -u redis://ics-hullm-redis:6379 default
     environment:
@@ -24,7 +22,8 @@ services:
     deploy:
       replicas: 3
     depends_on:
-      - ics-hullm-redis
+      ics-hullm-redis:
+        condition: service_healthy
 
   ics-hullm-backend:
     image: ${REGISTRY_PATH}ics-hullm-backend
@@ -32,29 +31,15 @@ services:
     build:
       dockerfile: backend.Dockerfile
     volumes:
-      - ./ics:/app/ics
-      - ./lib:/app/lib
       - ics-hullm-data:/data
-    command: uvicorn ics_components.main:app --port 9997 --reload --app-dir src --host 0.0.0.0
+    command: uvicorn ics_components.main:app --port 9997 --app-dir src --host 0.0.0.0
     environment:
       REDIS_HOST: ics-hullm-redis
       IS_DATA_DIR: /data
     ports:
-      - 9997:9997
-#      - 9898:9898 # python debug server
+      - "9997:9997"
     depends_on:
       - ics-hullm-redis
-
-  ics-hullm-rq-dashboard:
-    image: ${REGISTRY_PATH}ics-hullm-worker
-    container_name: ics-hullm-rq-dashboard
-    build:
-      dockerfile: worker.Dockerfile
-    command: rq-dashboard --redis-url=redis://ics-hullm-redis:6379
-#    ports:
-#      - 9181:9181
-#    profiles:
-#      - dev
 
 volumes:
   ics-hullm-data:
