@@ -43,14 +43,14 @@ services:
       - "traefik.http.routers.ics-hullm-backend-oauth.entrypoints=websecure"
       - "traefik.http.routers.ics-hullm-backend-oauth.tls=true"
       - "traefik.http.routers.ics-hullm-backend-oauth.tls.certresolver=${TLS_CERTIFICATE_RESOLVER}"
-      - "traefik.http.routers.ics-hullm-backend-oauth.rule=Host(`is.${SERVER_NAME}`)"
+      - "traefik.http.routers.ics-hullm-backend-oauth.rule=Host(`hullm.${SERVER_NAME}`)"
       - "traefik.http.routers.ics-hullm-backend-oauth.middlewares=security-headers"
       - "traefik.docker.network=app-net"
     environment:
       <<: *env-oauth2-proxy
       OAUTH2_PROXY_CLIENT_ID: ics-hullm
       OAUTH2_PROXY_CLIENT_SECRET: ${ICS_HULLM_CLIENT_SECRET}
-      OAUTH2_PROXY_REDIRECT_URL: https://cs1.${SERVER_NAME}/oauth2/callback
+      OAUTH2_PROXY_REDIRECT_URL: https://hullm.${SERVER_NAME}/oauth2/callback
       OAUTH2_PROXY_COOKIE_SECRET: ${ICS_HULLM_COOKIE_SECRET}
       OAUTH2_PROXY_EMAIL_DOMAINS: ${TRAEFIK_EMAIL_DOMAIN}
       OAUTH2_PROXY_UPSTREAMS: http://ics-hullm-backend:9997/info
