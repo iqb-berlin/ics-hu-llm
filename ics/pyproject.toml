@@ -20,3 +20,4 @@ Homepage = "https://github.com/iqb-berlin/ics-hu-llm"
 
 [tool.ics]
 name = 'hu-llm'
+mode = 'direct'

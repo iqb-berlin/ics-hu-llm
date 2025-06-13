@@ -5,9 +5,8 @@ from typing import List, Callable
 from gradio_client import Client
 from redis import StrictRedis
 
-from ics_components.common import print_in_worker
 from ics_components.common.models import TrainingResult
-from ics.implementation import TaskInstructions
+from ics.implementation import TaskInstructions, CoderRegistry
 from ics_models import Response, Code
 
 redis_host = os.getenv('REDIS_HOST') or 'localhost'
