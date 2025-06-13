@@ -1,6 +1,6 @@
 import os
 import uuid
-from typing import List
+from typing import List, Callable
 
 from gradio_client import Client
 from redis import StrictRedis
@@ -40,24 +40,34 @@ def get_code_from_answer(answer: str) -> List[Code] | str:
         ]
     return [Code(id = predicted_code)]
 
-def code(model_id: str, input_data: List[Response]) -> List[Response]:
+def code(model_id: str, input_data: List[Response], reporter: Callable[[str, bool], None]) -> List[Response]:
     client = connect()
     instructions = restore_instructions(model_id)
+    items = len(input_data)
+    item_nr = 0
     for row in input_data:
-        print_in_worker(row)
         result = client.predict(
-            message = instructions.text.replace('$VALUE', row.value),
+            instructions.text.replace('$VALUE', row.value),
             api_name = "/chat"
         )
         codes = get_code_from_answer(result)
         if type(codes) == 'string':
             row.status = 'CODING_ERROR'
+            reporter(f'Result is not usable: {codes}', True)
         else :
             row.codes = codes
             row.status = 'CODE_SELECTION_PENDING'
+        item_nr += 1
+        if item_nr % 5 == 0:
+            reporter(f'{item_nr}/{items}', False)
     return input_data
 
-def train(task_label: str, instructions: TaskInstructions, input_data: List[Response]) -> TrainingResult:
+def train(
+    task_label: str,
+    instructions: TaskInstructions,
+    input_data: List[Response],
+    reporter: Callable[[str, bool], None]
+) -> TrainingResult:
     coder_id = str(uuid.uuid4())
     store_instructions(coder_id, instructions)
     return TrainingResult(coderId = coder_id, msg = "okay")
